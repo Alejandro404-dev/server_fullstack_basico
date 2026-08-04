@@ -49,3 +49,41 @@ export async function listarProductos(_req: Request, res: Response, next: NextFu
     }
 
 }
+export async function editarProducto(req: Request, res: Response, next: NextFunction) {
+    try {
+        // 1- validamos el id
+        //el id siempre viene como string "api/product/7 "
+        const id = Number(req.params.id)
+
+        // ID valido(true) = 7, 2.5 - Id NaN - Infinity (-Infiniti)
+        if (!Number.isFinite(id)) {
+            return res.status(400).json({ message: "id invalido"}) 
+        }
+
+        const {name, price } = req.body as {name?: string; price?: number}
+
+        if (typeof name === "undefined" && typeof price === "undefined") {
+            return res.json(400).json ({message: "Nada que actualizar"}) 
+        }
+
+        // 2 - actualizamos
+
+        const updated = await prisma.product.update({
+            where: { id },       // El id cuyo campos dependientes (name o price) vamos a actualizar
+            data: {
+                ...(name !== undefined && { name}), // Incluir un "name" solo si vino
+                ...(price !== undefined && { price}), // Incluir un "price", solo si vino
+            },
+        })
+
+        // 3- respuesta de exito
+        return res.json(updated)
+        
+    } catch (error) { 
+        next(error) 
+    }
+
+}
+
+
+

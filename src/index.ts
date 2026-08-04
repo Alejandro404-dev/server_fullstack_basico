@@ -5,8 +5,6 @@ import cors, { type CorsOptions } from "cors"
 
 const app = express() //creamos una nueva app de Express (nuestro servidor)
 
-
-
 app.use(express.json())
 
 /* 
@@ -47,7 +45,7 @@ const cosrOptions: CorsOptions = {
 
         // 2 - si hay origen y esta en la whitelist, PERMITIMOS - El navegador autoriza la llamada del frontend
         if (whitelist.includes(origin)) {
-            return  callback(null, true)
+            return callback(null, true)
         }
 
         // 3. FLEXIBILIDAD PARA VERCEL: Si la URL viene de Vercel y te pertenece, la dejamos pasar
@@ -58,7 +56,6 @@ const cosrOptions: CorsOptions = {
 
         // 4 - en cualquier otro caso bloqueamos
         return callback(new Error("CORS: origen no permitido"))
-
 
     },
 

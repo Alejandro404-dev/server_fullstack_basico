@@ -1,7 +1,7 @@
 import { Router } from "express"
-import { crearProducto, listarProductos } from "../controllers/productController"
+import { crearProducto, editarProducto, listarProductos } from "../controllers/productController"
 import { validateBody } from "../middleware/validate"
-import { ProductCreateSchema } from "../validators/product.schema"
+import { ProductCreateSchema, ProductPatchSchema } from "../validators/product.schema"
 
 const router = Router()
 
@@ -14,9 +14,7 @@ router.get('/', listarProductos)
 router.post('/', validateBody(ProductCreateSchema), crearProducto)
 
 // para editar datos de la base de datos
-router.put('/', (req, res) => {
-    res.json("Desde PUT")
-})
+router.patch('/:id', validateBody(ProductPatchSchema), editarProducto)
 
 //para elimiar datos de la base de datos
 router.delete('/', (req, res) => {
