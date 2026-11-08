@@ -28,4 +28,13 @@ export const ProductPatchSchema = object({
             minValue(0.01, 'price debe ser > 0')
         )
     )
-}) 
+})
+
+
+//Esquema para params - ( DELETE /api/product/:id )
+export const ProductIdParamsSchema = object({
+    id: pipe(
+        number('El id debe ser un numero'),
+        minValue(1, 'El id debe ser mayor o igual a 1')
+    )
+})

@@ -57,13 +57,13 @@ export async function editarProducto(req: Request, res: Response, next: NextFunc
 
         // ID valido(true) = 7, 2.5 - Id NaN - Infinity (-Infiniti)
         if (!Number.isFinite(id)) {
-            return res.status(400).json({ message: "id invalido"}) 
+            return res.status(400).json({ message: "id invalido" })
         }
 
-        const {name, price } = req.body as {name?: string; price?: number}
+        const { name, price } = req.body as { name?: string; price?: number }
 
         if (typeof name === "undefined" && typeof price === "undefined") {
-            return res.json(400).json ({message: "Nada que actualizar"}) 
+            return res.json(400).json({ message: "Nada que actualizar" })
         }
 
         // 2 - actualizamos
@@ -71,19 +71,36 @@ export async function editarProducto(req: Request, res: Response, next: NextFunc
         const updated = await prisma.product.update({
             where: { id },       // El id cuyo campos dependientes (name o price) vamos a actualizar
             data: {
-                ...(name !== undefined && { name}), // Incluir un "name" solo si vino
-                ...(price !== undefined && { price}), // Incluir un "price", solo si vino
+                ...(name !== undefined && { name }), // Incluir un "name" solo si vino
+                ...(price !== undefined && { price }), // Incluir un "price", solo si vino
             },
         })
 
         // 3- respuesta de exito
         return res.json(updated)
-        
-    } catch (error) { 
-        next(error) 
+
+    } catch (error) {
+        next(error)
     }
 
 }
 
 
+export async function eliminarProducto(req: Request, res: Response, next: NextFunction) {
+    try {
+        // 1 - ya lo validamos en el validateParams, pero de toda forma lo tipamos claro
+        const id = req.params.id as unknown as number
 
+        // 2 - intentamos eliminar el producto
+        await prisma.product.delete({ where: { id } })
+
+        // 3 - si sale bein respondemos 204 = No content
+        // Como ya no eciste el registro en la base de datos no hace falta devolver un JSON
+        return res.status(204).send()
+
+    } catch (error) {
+        next(error)
+
+    }
+
+}
