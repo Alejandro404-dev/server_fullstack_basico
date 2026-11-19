@@ -1,6 +1,7 @@
 import express from "express" //framework para crear aplicaciones web
 import router from "./router"
 import cors, { type CorsOptions } from "cors"
+import { aiController } from "./controllers/aiController"
 
 
 const app = express() //creamos una nueva app de Express (nuestro servidor)
@@ -65,7 +66,10 @@ const cosrOptions: CorsOptions = {
 app.use(cors(cosrOptions))
 app.options(/.*/, cors(cosrOptions))
 
-app.use('/api/products', router) //le decimos a la app que use el router para las rutas que empiecen con /api/products  
+app.use('/api/products', router) //le decimos a la app que use el router para las rutas que empiecen con /api/products
+
+app.get("/api/ai/products-profile", aiController)
+
 
 // 404 - "Not found": se ejecuta si ninguna ruta contesta a la peticion  
 
